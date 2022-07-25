@@ -2,7 +2,7 @@ import { Controller, Get, Version, VERSION_NEUTRAL } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ApiOperation } from '@nestjs/swagger';
 
-@Controller({ path: 'api', version: VERSION_NEUTRAL })
+@Controller({ version: VERSION_NEUTRAL })
 export class AppController {
   constructor(private readonly configService: ConfigService) {}
 

@@ -1,6 +1,7 @@
 import { VersioningType, VERSION_NEUTRAL } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { TransformInterceptor } from '@/common/interceptors/transform.interceptor';
 import { generateDocument } from './doc';
 declare const module: any;
 async function bootstrap() {
@@ -11,6 +12,12 @@ async function bootstrap() {
     defaultVersion: [VERSION_NEUTRAL, '1', '2'],
     type: VersioningType.URI,
   });
+
+  // 设置全局接口前缀
+  app.setGlobalPrefix('api');
+
+  // 统一响应体格式
+  app.useGlobalInterceptors(new TransformInterceptor());
 
   // 创建文档
   generateDocument(app);
