@@ -4,19 +4,25 @@ import {
   VERSION_NEUTRAL,
 } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { TransformInterceptor } from '@/common/interceptors/transform.interceptor';
-import { generateDocument } from './doc';
-import { WsAdapter } from './common/ws/ws.adapter';
-import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
-import { FastifyLogger } from './common/logger';
+import {
+  FastifyAdapter,
+  NestFastifyApplication,
+} from '@nestjs/platform-fastify';
 import fastify from 'fastify';
+import { AppModule } from './app.module';
+import { generateDocument } from './doc';
+
+import { WsAdapter } from '@/common/ws/ws.adapter';
+import { FastifyLogger } from '@/common/logger';
+import { AllExceptionsFilter } from '@/common/exceptions/base.exception.filter';
+import { HttpExceptionFilter } from '@/common/exceptions/http.exception.filter';
+import { TransformInterceptor } from '@/common/interceptors/transform.interceptor';
+
 declare const module: any;
 async function bootstrap() {
   const fastifyInstance = fastify({
     logger: FastifyLogger,
-    // logger: true
-  })
+  });
 
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
@@ -28,6 +34,9 @@ async function bootstrap() {
     defaultVersion: [VERSION_NEUTRAL, '1', '2'],
     type: VersioningType.URI,
   });
+
+  // 异常过滤器
+  app.useGlobalFilters(new AllExceptionsFilter(), new HttpExceptionFilter());
 
   // 设置全局接口前缀
   app.setGlobalPrefix('api');

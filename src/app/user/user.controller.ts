@@ -11,6 +11,8 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { BusinessException } from '@/common/exceptions/business.exception';
+import { ApiOperation } from '@nestjs/swagger';
 
 @Controller({ path: 'user', version: VERSION_NEUTRAL })
 export class UserController {
@@ -39,5 +41,19 @@ export class UserController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
+  }
+
+  @ApiOperation({
+    summary: '异常处理',
+  })
+  @Get('exception')
+  Exception() {
+    const a: any = {};
+    try {
+      console.log(a.b.c);
+    } catch (error) {
+      throw new BusinessException('你这个参数错了');
+    }
+    return this.userService.findAll();
   }
 }
