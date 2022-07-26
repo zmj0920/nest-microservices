@@ -10,7 +10,7 @@ import {
 } from '@nestjs/platform-fastify';
 import fastify from 'fastify';
 import { AppModule } from './app.module';
-import { generateDocument } from './doc';
+import { generateDocument } from './common/doc/doc';
 
 import { WsAdapter } from '@/common/ws/ws.adapter';
 import { FastifyLogger } from '@/common/logger';

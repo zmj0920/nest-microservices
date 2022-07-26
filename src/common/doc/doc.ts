@@ -3,7 +3,7 @@
 // https://blog.csdn.net/weixin_44828005/article/details/116136244
 
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import * as packageConfig from '../package.json';
+import * as packageConfig from '../../../package.json';
 
 export const generateDocument = (app) => {
   const options = new DocumentBuilder()
