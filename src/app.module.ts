@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { UserModule } from './app/user/user.module';
+import { WsModule } from './common/ws/ws.module';
 import { getConfig } from './utils';
 
 @Module({
@@ -11,7 +12,8 @@ import { getConfig } from './utils';
       isGlobal: true,
       load: [getConfig]
     }),
-    UserModule
+    UserModule,
+    WsModule
   ],
   controllers: [AppController],
   providers: [],
