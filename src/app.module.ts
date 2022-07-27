@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './app/auth/auth.module';
 import { UserModule } from './app/user/user.module';
 import { getConfig } from './utils';
 
@@ -8,9 +9,10 @@ import { getConfig } from './utils';
     ConfigModule.forRoot({
       ignoreEnvFile: true,
       isGlobal: true,
-      load: [getConfig]
+      load: [getConfig],
     }),
     UserModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],

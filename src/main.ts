@@ -8,10 +8,11 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
+import fastifyCookie from '@fastify/cookie';
 import fastify from 'fastify';
 import { AppModule } from './app.module';
-import { generateDocument } from './common/doc/doc';
 
+import { generateDocument } from '@/common/doc/doc';
 import { WsAdapter } from '@/common/ws/ws.adapter';
 import { FastifyLogger } from '@/common/logger';
 import { AllExceptionsFilter } from '@/common/exceptions/base.exception.filter';
@@ -30,9 +31,14 @@ async function bootstrap() {
   );
 
   // 接口版本化管理 支持多个版本
+  // [VERSION_NEUTRAL, '1', '2']
   app.enableVersioning({
-    defaultVersion: [VERSION_NEUTRAL, '1', '2'],
+    defaultVersion: [VERSION_NEUTRAL],
     type: VersioningType.URI,
+  });
+
+  app.register(fastifyCookie, {
+    secret: 'my-secret', // for cookies signature
   });
 
   // 异常过滤器
