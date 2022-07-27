@@ -2,7 +2,13 @@ import { DataSource } from 'typeorm';
 
 import { getConfig } from '@/utils/index';
 import { NamingStrategy } from './naming.strategies';
-import { User } from '@/app/user/entities/user.entity';
+import { User } from '@/app/user/user.mysql.entity';
+import { Privilege } from '@/app/privilege/privilege.mysql.entity';
+import { Resource } from '@/app/resource/resource.mysql.entity';
+import { Role } from '@/app/role/role.mysql.entity';
+import { RolePrivilege } from '@/app/role-privilege/role-privilege.mysql.entity';
+import { System } from '@/app/system/system.mysql.entity';
+import { UserRole } from '@/app/user-role/user-role.mysql.entity';
 
 const { MYSQL_CONFIG } = getConfig();
 
@@ -10,7 +16,7 @@ const { MYSQL_CONFIG } = getConfig();
 const MYSQL_DATABASE_CONFIG = {
   ...MYSQL_CONFIG,
   NamedNodeMap: new NamingStrategy(),
-  entities: [User]
+  entities: [Privilege, Resource, Role, RolePrivilege, System, User, UserRole]
 };
 
 const MYSQL_DATA_SOURCE = new DataSource(MYSQL_DATABASE_CONFIG);
