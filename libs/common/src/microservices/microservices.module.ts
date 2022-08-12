@@ -8,7 +8,7 @@ const { USER_MICROSERVICES } = getConfig();
   imports: [
     ClientsModule.register([
       {
-        name: 'USER-SERVER',
+        name: 'USER_SERVER',
         transport: Transport.TCP,
         options: USER_MICROSERVICES,
       },

@@ -18,3 +18,11 @@ export class CreateUserDto {
   @IsNotEmpty()
   password: string;
 }
+
+export class LoginDto {
+  @ApiProperty({ example: 'root' })
+  username: string;
+
+  @ApiProperty({ example: 'admin' })
+  password: string;
+}

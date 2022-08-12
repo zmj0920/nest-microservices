@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class UserService {
-  constructor(@Inject('USER-SERVER') private userServer: ClientProxy) {}
+  constructor(@Inject('USER_SERVER') private userServer: ClientProxy) {}
 
   getUser(user) {
     return firstValueFrom(

@@ -13,6 +13,6 @@ import { jwtConstants, JwtStrategy } from '@app/common';
     }),
   ],
   providers: [JwtStrategy],
-  exports: [],
+  exports: [PassportModule, JwtModule],
 })
 export class AuthModule {}

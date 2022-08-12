@@ -11,4 +11,8 @@ export * from './utils';
 export * from './doc/doc';
 export * from './auth/guards/jwt-auth.guard';
 export * from './auth/guards/local-auth.guard';
+export * from './auth/guards/permission.guard';
 export * from './auth/strategies/jwt.strategy';
+export * from './auth/auth.module';
+export * from './microservices/microservices.module';
+export * from './microservices/user.service';
