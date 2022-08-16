@@ -2,6 +2,10 @@ import { getConfig, TransformInterceptor } from '@app/common';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { PrivilegeModule } from './app/privilege/privilege.module';
+import { RolePrivilegeModule } from './app/role-privilege/role-privilege.module';
+import { RoleModule } from './app/role/role.module';
+import { UserRoleModule } from './app/user-role/user-role.module';
 import { UserModule } from './app/user/user.module';
 
 @Module({
@@ -12,6 +16,10 @@ import { UserModule } from './app/user/user.module';
       load: [getConfig],
     }),
     UserModule,
+    RolePrivilegeModule,
+    UserRoleModule,
+    RoleModule,
+    PrivilegeModule
   ],
   controllers: [],
   providers: [

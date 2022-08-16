@@ -1,11 +1,11 @@
 import * as WebSocket from 'ws';
-import { WebSocketAdapter } from '@nestjs/common';
+import { WebSocketAdapter, INestApplicationContext } from '@nestjs/common';
 import { MessageMappingProperties } from '@nestjs/websockets';
 import { Observable, fromEvent, EMPTY } from 'rxjs';
 import { mergeMap, filter } from 'rxjs/operators';
 
 export class WsAdapter implements WebSocketAdapter {
-  constructor() {}
+  constructor(private app: INestApplicationContext) {}
 
   create(port: number, options: any = {}): any {
     console.log('ws create');

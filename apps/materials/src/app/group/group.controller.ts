@@ -28,10 +28,13 @@ export class GroupController {
 
   @Post('save')
   multrepoSave(@Body() params: addGroupDto, @PayloadUser() user: Payload) {
+    console.log(params);
+    console.log(user);
+
     return this.multrepoGroupService.save({
       ...params,
       creatorName: user.username,
-      creatorId: user.userId,
+      creatorId: user.id,
     });
   }
 

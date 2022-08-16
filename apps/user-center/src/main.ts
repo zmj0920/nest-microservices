@@ -1,7 +1,4 @@
-import {
-  ValidationPipe,
-  VersioningType,
-} from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import {
   FastifyAdapter,
@@ -17,7 +14,6 @@ import {
   AllExceptionsFilter,
   HttpExceptionFilter,
   generateDocument,
-  TransformInterceptor,
 } from '@app/common';
 
 import * as cookieParser from 'cookie-parser';
@@ -82,7 +78,7 @@ async function bootstrap() {
   // app.useGlobalInterceptors(new TransformInterceptor());
 
   //ws
-  app.useWebSocketAdapter(new WsAdapter());
+  app.useWebSocketAdapter(new WsAdapter(app));
 
   // 启动全局字段校验，保证请求接口字段校验正确。
   app.useGlobalPipes(new ValidationPipe());
@@ -95,6 +91,7 @@ async function bootstrap() {
 
   // 启动服务
   await app.listen(4000);
+  console.log(`Application is running on: ${await app.getUrl()}`);
 
   // 添加热更新
   if (module.hot) {

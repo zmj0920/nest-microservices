@@ -30,7 +30,7 @@ export class Task {
   deployNum: number;
 
   @Column()
-  projectId: number;
+  projectId: string;
 
   @Column()
   branch: string;

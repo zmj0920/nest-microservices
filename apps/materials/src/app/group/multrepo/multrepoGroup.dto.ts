@@ -18,6 +18,10 @@ export class addGroupDto {
   @ApiProperty({ example: 'test' })
   @IsNotEmpty()
   desc: string;
+
+  @ApiProperty({ example: '1' })
+  @IsNotEmpty()
+  status: number;
 }
 
 export class addMonorepoGroupDto extends CreateProjectDto {

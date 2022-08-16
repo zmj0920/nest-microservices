@@ -10,8 +10,8 @@ import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
 export class Project {
-  @PrimaryGeneratedColumn()
-  id?: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   zhName: string;
@@ -53,7 +53,7 @@ export class Project {
   creatorName: string;
 
   @Column()
-  creatorId: number;
+  creatorId: string;
 
   @Column()
   status: string;

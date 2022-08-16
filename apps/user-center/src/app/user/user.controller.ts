@@ -7,6 +7,8 @@ import {
   Query,
   Body,
   Get,
+  Put,
+  Delete,
 } from '@nestjs/common';
 import { FastifyReply } from 'fastify';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -15,18 +17,25 @@ import {
   LocalAuthGuard,
   Public,
   PayloadUser,
+  BusinessException,
 } from '@app/common';
 import { MessagePattern, Payload as MicroPayload } from '@nestjs/microservices';
 import { UserService } from '../user/user.service';
-import { CreateUserDto, LoginDto } from './user.dto';
+import {
+  CreateUserDto,
+  DeleteUserDto,
+  DisableUserDto,
+  LoginDto,
+  UserListWithPaginationDto,
+} from './user.dto';
 
 @ApiTags('用户信息')
-@Controller({ version: VERSION_NEUTRAL })
+@Controller({ path: 'user', version: VERSION_NEUTRAL })
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @ApiOperation({
-    summary: '登出',
+    summary: '退出登录',
     description: '服务器端清除 jwt cookies',
   })
   @Post('logout')
@@ -35,7 +44,10 @@ export class UserController {
     return {};
   }
 
-  // 登录接口
+  @ApiOperation({
+    summary: '用户登录',
+    description: '用户登录',
+  })
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(
@@ -53,9 +65,11 @@ export class UserController {
     };
   }
 
-  // 查询个人信息
+  @ApiOperation({
+    summary: '个人信息',
+  })
   @UseGuards(JwtAuthGuard)
-  @Post('profile')
+  @Get('profile')
   profile(@PayloadUser() user: Payload) {
     return user;
   }
@@ -66,13 +80,42 @@ export class UserController {
     return this.profile(data);
   }
 
+  @ApiOperation({
+    summary: '注册用户',
+  })
   @Post('register')
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
 
-  @Get('users')
-  findAll() {
-    return this.userService.findAll();
+  @ApiOperation({
+    summary: '用户列表',
+  })
+  @Post('/list')
+  async listWithPagination(@Body() dto: UserListWithPaginationDto) {
+    const { page, ...searchParams } = dto;
+    const users = await this.userService.paginate(searchParams, page);
+    return users;
+  }
+
+  @ApiOperation({
+    summary: '禁用用户',
+  })
+  @Put('disable')
+  async changeStatus(@Body() dto: DisableUserDto) {
+    const found = await this.userService.getUserById(dto.userId);
+    if (!found) {
+      throw new BusinessException(`未找到 ID 为 ${dto.userId} 的用户`);
+    }
+    return this.userService.createOrSave({ ...found, status: dto.status });
+  }
+
+  @ApiOperation({
+    summary: '删除用户',
+  })
+  @Delete('delete')
+  delete(@Body() user: DeleteUserDto) {
+    const { id } = user;
+    return this.userService.detete(id);
   }
 }

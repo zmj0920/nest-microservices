@@ -8,7 +8,7 @@ import {
 
 @Entity()
 export class MultrepoGroup {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number;
 
   @Column({ default: null })
@@ -21,7 +21,7 @@ export class MultrepoGroup {
   creatorName: string;
 
   @Column()
-  creatorId: number;
+  creatorId: string;
 
   @CreateDateColumn()
   createDate: string;

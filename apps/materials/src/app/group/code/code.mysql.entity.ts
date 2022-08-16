@@ -8,8 +8,8 @@ import {
 
 @Entity()
 export class CodeGroup {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ default: null })
   name: string;

@@ -17,7 +17,7 @@ export class ProjectController {
   create(@Body() addProjectDto: AddProjectDto, @PayloadUser() user: Payload) {
     return this.projectService.saveAndUpdate({
       ...addProjectDto,
-      creatorId: user.userId,
+      creatorId: user.id,
       creatorName: user.name,
     });
   }

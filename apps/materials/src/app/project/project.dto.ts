@@ -2,8 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 
 export class AddProjectDto {
-  @ApiProperty({ example: '6263f15f6d160033b35061d7', description: '项目id' })
-  id?: string;
 
   @ApiProperty({ example: '测试项目', description: '中文名' })
   zhName: string;
@@ -33,4 +31,8 @@ export class AddProjectDto {
 
   @ApiProperty({ example: '1', description: 'git 仓库项目描述' })
   gitProjectDesc: string;
+
+  @ApiProperty({ example: '1' })
+  @IsNotEmpty()
+  status: string;
 }

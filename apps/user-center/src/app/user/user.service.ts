@@ -2,11 +2,13 @@ import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { User } from './user.mysql.entity';
 import * as bcrypt from 'bcrypt';
-import { BCRYPT_SIZE } from '@app/common/utils/constants';
-import { CreateUserDto, LoginDto } from './user.dto';
+import { BCRYPT_SIZE, getPaginationOptions } from '@app/common';
+import { CreateUserDto, LoginDto, UserListWithPaginationDto } from './user.dto';
 
 import { JwtService } from '@nestjs/jwt';
 import * as _ from 'lodash';
+import { paginate, Pagination } from 'nestjs-typeorm-paginate';
+import { isNotEmpty } from 'class-validator';
 
 @Injectable()
 export class UserService {
@@ -83,5 +85,46 @@ export class UserService {
       userInfo,
       access_token,
     };
+  }
+
+  async paginate(
+    searchParams: UserListWithPaginationDto,
+    page: PaginationParams,
+  ): Promise<Pagination<User, CustomPaginationMeta>> {
+    const queryBuilder = this.userRepository.createQueryBuilder('user');
+    queryBuilder.orderBy('user.updateTime', 'DESC');
+    if (isNotEmpty(searchParams.keyword)) {
+      queryBuilder.andWhere('user.name LIKE :name', {
+        name: `%${searchParams.keyword}%`,
+      });
+      queryBuilder.orWhere('user.username LIKE :name', {
+        name: `%${searchParams.keyword}%`,
+      });
+    }
+    return paginate<User, CustomPaginationMeta>(
+      queryBuilder,
+      getPaginationOptions(page),
+    );
+  }
+
+  async getUserById(id: string) {
+    return this.userRepository.findOne({
+      where: {
+        id,
+      },
+    });
+  }
+
+  createOrSave(user: User) {
+    this.userRepository.save(user);
+  }
+
+  async detete(id: string) {
+    const user = await this.getUserById(id);
+    if (_.isEmpty(user)) {
+      throw new BadRequestException(`${id} not exist`);
+    }
+    this.userRepository.delete(id);
+    return user;
   }
 }
