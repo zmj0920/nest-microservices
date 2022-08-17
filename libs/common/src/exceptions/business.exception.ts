@@ -7,10 +7,13 @@ type BusinessError = {
 };
 
 export class BusinessException extends HttpException {
-  constructor(err: BusinessError | string) {
+  constructor(
+    err: BusinessError | string,
+    code: number = BUSINESS_ERROR_CODE.COMMON,
+  ) {
     if (typeof err === 'string') {
       err = {
-        code: BUSINESS_ERROR_CODE.COMMON,
+        code: code,
         message: err,
       };
     }

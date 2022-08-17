@@ -1,7 +1,7 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty } from "class-validator";
-import { PaginationParams } from "types/type";
-import { Action, PrivilegeStatus } from "./privilege.mysql.entity";
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty } from 'class-validator';
+import { PaginationParams } from 'types/type';
+import { Action, PrivilegeStatus } from './privilege.mysql.entity';
 export class CreatePrivilegeDto {
   @IsNotEmpty()
   @ApiProperty({ example: '查看', description: '权限名称' })
@@ -10,9 +10,24 @@ export class CreatePrivilegeDto {
   @ApiProperty({ example: '查看', description: '权限描述' })
   description?: string;
 
-  @ApiProperty({ example: 'read', enum: Action })
-  @IsNotEmpty()
-  action: string;
+  // @ApiProperty({ example: 'read', enum: Action })
+  // @IsNotEmpty()
+  // action: string;
+
+  @ApiProperty({ example: null, description: '父级id' })
+  parentId: string;
+
+  @ApiProperty({ example: 'user' })
+  url: string;
+
+  @ApiProperty({ example: 0, description: '排序' })
+  orderNum: number;
+
+  @ApiProperty({
+    description: '菜单类型 1-菜单/目录 2-tabs 3-按钮',
+    required: false,
+  })
+  type: 1 | 2 | 3;
 }
 
 export class DeletePrivilegeDto {

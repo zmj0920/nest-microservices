@@ -23,8 +23,12 @@ export class PrivilegeController {
   async create(@Body() dto: CreatePrivilegeDto) {
     const privilege: Privilege = {
       name: dto.name,
-      action: dto.action,
+      // action: dto.action,
       description: dto.description,
+      parentId: dto.parentId,
+      url: dto.url,
+      orderNum: dto.orderNum,
+      type: dto.type,
     };
 
     return this.privilegeService.createOrUpdate(privilege);
@@ -35,11 +39,15 @@ export class PrivilegeController {
   })
   @Post('update')
   async update(@Body() dto: UpdatePrivilegeDto) {
-    const { id, name, action, description } = dto;
+    const { id, name, description, parentId, orderNum, type, url } = dto;
     const updatedPrivilege: Privilege = {
       name,
-      action,
+      // action,
       description,
+      parentId,
+      url,
+      orderNum,
+      type,
     };
 
     const privilege = await this.privilegeService.findById(id);

@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { isNotEmpty } from 'class-validator';
 import { paginate, Pagination } from 'nestjs-typeorm-paginate';
-import { getPaginationOptions } from '@app/common';
+import { getPaginationOptions, tree } from '@app/common';
 import { In, Repository } from 'typeorm';
 import { PrivilegeListWithPaginationDto } from './privilege.dto';
 import { Privilege } from './privilege.mysql.entity';
@@ -17,8 +17,9 @@ export class PrivilegeService {
     return this.privilegeRepository.save(privilege);
   }
 
-  list() {
-    return this.privilegeRepository.find();
+  async list() {
+    const menu = await this.privilegeRepository.find();
+    return tree(menu, '0');
   }
 
   findById(id: string) {

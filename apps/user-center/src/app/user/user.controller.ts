@@ -48,6 +48,7 @@ export class UserController {
     summary: '用户登录',
     description: '用户登录',
   })
+  @Public()
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(
@@ -83,6 +84,7 @@ export class UserController {
   @ApiOperation({
     summary: '注册用户',
   })
+  @Public()
   @Post('register')
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);

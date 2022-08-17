@@ -1,12 +1,15 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { User } from './user.mysql.entity';
 import * as bcrypt from 'bcrypt';
-import { BCRYPT_SIZE, getPaginationOptions } from '@app/common';
+import {
+  BCRYPT_SIZE,
+  BusinessException,
+  getPaginationOptions,
+} from '@app/common';
 import { CreateUserDto, LoginDto, UserListWithPaginationDto } from './user.dto';
 
 import { JwtService } from '@nestjs/jwt';
-import * as _ from 'lodash';
 import { paginate, Pagination } from 'nestjs-typeorm-paginate';
 import { isNotEmpty } from 'class-validator';
 
@@ -19,16 +22,16 @@ export class UserService {
 
   async create(user: CreateUserDto) {
     const { username } = user;
-    if (_.isEmpty(username)) {
-      throw new BadRequestException('please enter username!');
+    if (!username) {
+      throw new BusinessException('please enter username!');
     } else {
       const loginUser = await this.findLoginUser(username);
-      if (_.isEmpty(loginUser)) {
+      if (!loginUser) {
         const password = user.password;
         user.password = await bcrypt.hashSync(password, BCRYPT_SIZE);
         return this.userRepository.save(user);
       } else {
-        throw new BadRequestException('user information exists!');
+        throw new BusinessException('user information exists!');
       }
     }
   }
@@ -56,23 +59,24 @@ export class UserService {
   async validateUser(user: LoginDto): Promise<any> {
     const username = user.username;
     const password = user.password;
-    if (_.isEmpty(username) || _.isEmpty(password)) {
-      throw new BadRequestException('user is required!');
+    if (!username || !password) {
+      throw new BusinessException('user is required!');
     }
     // 去数据库查找该user
     const loginUser = await this.findLoginUser(username);
-    if (_.isEmpty(loginUser)) {
-      throw new BadRequestException('user not found!');
+    if (!loginUser) {
+      throw new BusinessException('user not found!', 10000);
     }
     const isValidPwd = await bcrypt.compare(password, loginUser.password);
     if (!isValidPwd) {
-      throw new BadRequestException('password is not valid!');
+      throw new BusinessException('account or password error!');
     }
     const sanitizedUser = {
       id: loginUser.id,
       username: loginUser.username,
       email: loginUser.email,
       name: loginUser.name,
+      status: loginUser.status,
     };
     return sanitizedUser;
   }
@@ -121,8 +125,8 @@ export class UserService {
 
   async detete(id: string) {
     const user = await this.getUserById(id);
-    if (_.isEmpty(user)) {
-      throw new BadRequestException(`${id} not exist`);
+    if (!user) {
+      throw new BusinessException(`${id} not exist`);
     }
     this.userRepository.delete(id);
     return user;

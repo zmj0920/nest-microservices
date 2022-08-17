@@ -61,3 +61,9 @@ export const PayloadUser = createParamDecorator(
     return request.user;
   },
 );
+
+export const tree = (items, id = null, parent = 'parentId') => {
+  return items
+    .filter((item) => item[parent] === id)
+    .map((item) => ({ ...item, children: tree(items, item.id) }));
+};

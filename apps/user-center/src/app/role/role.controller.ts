@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Post, Put } from '@nestjs/common';
+import { BusinessException } from '@app/common';
+import { Body, Controller, Delete, Post, Put } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PrivilegeService } from '../privilege/privilege.service';
 import { RolePrivilegeService } from '../role-privilege/role-privilege.service';
@@ -29,24 +30,24 @@ export class RoleController {
     return this.roleService.create(createRoleDto);
   }
 
-  // @ApiOperation({
-  //   summary: '修改角色信息',
-  // })
-  // @Post('update')
-  // async update(@Body() dto: UpdateRoleDto) {
-  //   const foundRole = await this.roleService.findById(dto.id);
-  //   if (!foundRole) {
-  //     throw new BusinessException('未找到角色');
-  //   }
-  //   return await this.roleService.update({ ...foundRole, ...dto });
-  // }
+  @ApiOperation({
+    summary: '修改角色信息',
+  })
+  @Put('update')
+  async update(@Body() dto: UpdateRoleDto) {
+    const foundRole = await this.roleService.findById(dto.id);
+    if (!foundRole) {
+      throw new BusinessException('未找到角色');
+    }
+    return await this.roleService.update({ ...foundRole, ...dto });
+  }
 
   @ApiOperation({
     summary: '删除角色',
     description:
       '如果发现角色有绑定权限，权限将同步删除 Role - privilege 关系表',
   })
-  @Post('/delete')
+  @Delete('/delete')
   async delete(@Body() dto: DeleteRoleDto) {
     return await this.roleService.delete(dto.id);
   }
